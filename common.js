@@ -759,6 +759,151 @@ console.log(aElements);
 for (var i = 0; i < aElements.length; ++i) {
   aElements[i].onclick = function (e) {
     console.log(e.target.href);
+    if (!e.target.href.startsWith('https://google.com')) {
+      e.preventDefault();
+    }
   }
 }
+var ulElement = document.querySelector("ul");
+ulElement.onmousedown = function (e) {
+  e.preventDefault();
+};
+ulElement.onclick = function (e) {
+  console.log(e.target);
+};
+document.querySelector("div").onclick = function () {
+  console.log("DIV");
+};
+document.querySelector("button").onclick = function (e) {
+  e.stopPropagation();
+  console.log("Click me!");
+}
 
+
+/** 76. Event listener 
+ *  1. Event listener
+ *  2. JSON
+ *  3. Fetch
+ *  4. DOM location
+ *  5. Local storage
+ *  6. Session storage
+ *  7. Coding convention
+ *  8. Best Practices
+ *  9. Mistakes
+ *  10. Performance
+ * 
+ *  1. Xử lý nhiều vệc khi 1 event xảy ra
+ *  2. Lắng nghe / huỷ bỏ lắng nghe
+*/
+var btn = document.getElementById("btn");
+console.log(btn);
+// btn.onclick = function() {
+//   // Viec 1
+//   console.log("Viec 1");
+//   // Viec 2
+//   console.log("Viec 2");
+//   // Viec 3
+//   alert("Viec 3");
+// }
+// setTimeout(function() {
+//   btn.onclick = function() {};
+// }, 3000);
+function viec1() {
+  console.log("viec 1");
+}
+btn.addEventListener("click", viec1);
+
+
+/** 77. Form validation */
+// Doi tuong
+function Validator(options) {
+  var selectorRules = {};
+  // Ham thuc hien validate
+  function validate(inputElement, rule) {
+    var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+    var errorMessage;
+    // Lay ra cac rule cua selector
+    var rules = selectorRules[rule.selector];
+    // Lap qua tung rule va kiem tra
+    for(var i = 0; i < rules.length; ++i) {
+      errorMessage = rules[i](inputElement.value);
+      if (errorMessage) break;
+    }
+    if (errorMessage) {
+      errorElement.innerText = errorMessage;
+      inputElement.parentElement.classList.add("invalid");
+    } else {
+      errorElement.innerText = "";
+      inputElement.parentElement.classList.remove("invalid");
+    }
+  }
+  // Lay element cua form can validate
+  var formElement = document.querySelector(options.form);
+  if (formElement) {
+    formElement.onsubmit = function (e) {
+      e.preventDefault();
+      // Lap qua tung rules va validate
+      options.rules.forEach(function (rule) {
+        var inputElement = formElement.querySelector(rule.selector);
+        validate(inputElement, rule);
+      });
+    }
+    // Lap qua moi rule va xu ly
+    options.rules.forEach(function (rule) {
+      // Luu rule cho input
+      if (Array.isArray(selectorRules[rule.selector])) {
+        selectorRules[rule.selector].push(rule.test);
+      } else {
+        selectorRules[rule.selector] = [rule.test];
+      }
+      var inputElement = formElement.querySelector(rule.selector);
+      if (inputElement) {
+        // Xu ly truong hop blur khoi input
+        inputElement.onblur = function () {
+          validate(inputElement, rule);
+        }
+        // Xu ly truong hop khi nguoi dung nhap
+        inputElement.oninput = function() {
+          var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+          errorElement.innerText = "";
+          inputElement.parentElement.classList.remove("invalid");
+        }
+      }
+    });
+    console.log(selectorRules);
+  }
+};
+// Dinh nghia rules
+Validator.isRequired = function (selector, message) {
+  return {
+    selector: selector,
+    test: function (value) {
+      return value.trim() ? undefined : message || "Please enter!"
+    }
+  };
+};
+Validator.isEmail = function (selector, message) {
+  return {
+    selector: selector,
+    test: function (value) {
+       var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+       return regex.test(value) ? undefined : message || "Please enter correct email!"
+    }
+  };
+};
+Validator.minLength = function (selector, min, message) {
+  return {
+    selector: selector,
+    test: function (value) {
+       return value.length >= min ? undefined : message || `Please enter minimun ${min} character`;
+    }
+  };
+};
+Validator.isConfirmed = function(selector, getConfirmValue, message) {
+  return {
+    selector: selector,
+    test: function (value) {
+      return value == getConfirmValue()? undefined : message || "Value incorrect!";
+    }
+  }
+}
