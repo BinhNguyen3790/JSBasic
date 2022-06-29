@@ -836,17 +836,35 @@ function Validator(options) {
       errorElement.innerText = "";
       inputElement.parentElement.classList.remove("invalid");
     }
+    return !errorMessage;
   }
   // Lay element cua form can validate
   var formElement = document.querySelector(options.form);
   if (formElement) {
     formElement.onsubmit = function (e) {
       e.preventDefault();
+      var isFormValid = true;
       // Lap qua tung rules va validate
       options.rules.forEach(function (rule) {
         var inputElement = formElement.querySelector(rule.selector);
-        validate(inputElement, rule);
+        var isValid = validate(inputElement, rule);
+        if(!isValid) {
+          isFormValid = false;
+        }
       });
+      var enableInputs = formElement.querySelectorAll("[name]");
+      var formValues = Array.form(enableInputs).reduce(function(values, input) {
+        return (values[input.name] = input.value) && values;
+      }, {});
+      console.log(formValues);
+      console.log(enableInputs);
+      if (isFormValid) {
+        if(typeof options.onSubmit === "function") {
+          options.onSubmit({
+            name: "binhdev"
+          });
+        }
+      }
     }
     // Lap qua moi rule va xu ly
     options.rules.forEach(function (rule) {

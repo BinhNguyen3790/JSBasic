@@ -124,7 +124,10 @@
       Validator.isConfirmed("#re-password", function () {
         return document.querySelector("#form-1 #password").value;
       }, "Password incorrect")
-    ]
+    ],
+    onSubmit: function (data) {
+      console.log(data);
+    }
   })
 </script>
 
