@@ -817,10 +817,19 @@ btn.addEventListener("click", viec1);
 /** 77. Form validation */
 // Doi tuong
 function Validator(options) {
+  function getParent (element, selector) {
+    while (element.parentElement) {
+      if(element.parentElement.matches(selector)) {
+        return element.parentElement;
+      }
+      element = element.parentElement;
+    }
+  }
   var selectorRules = {};
   // Ham thuc hien validate
   function validate(inputElement, rule) {
-    var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+    // var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+    var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(options.errorSelector);
     var errorMessage;
     // Lay ra cac rule cua selector
     var rules = selectorRules[rule.selector];
@@ -831,10 +840,10 @@ function Validator(options) {
     }
     if (errorMessage) {
       errorElement.innerText = errorMessage;
-      inputElement.parentElement.classList.add("invalid");
+      getParent(inputElement, options.formGroupSelector).classList.add("invalid");
     } else {
       errorElement.innerText = "";
-      inputElement.parentElement.classList.remove("invalid");
+      getParent(inputElement, options.formGroupSelector).classList.remove("invalid");
     }
     return !errorMessage;
   }
@@ -852,17 +861,19 @@ function Validator(options) {
           isFormValid = false;
         }
       });
-      var enableInputs = formElement.querySelectorAll("[name]");
-      var formValues = Array.form(enableInputs).reduce(function(values, input) {
-        return (values[input.name] = input.value) && values;
-      }, {});
-      console.log(formValues);
-      console.log(enableInputs);
       if (isFormValid) {
+        // Truong hop submit voi javascript
         if(typeof options.onSubmit === "function") {
-          options.onSubmit({
-            name: "binhdev"
-          });
+          var enableInputs = formElement.querySelectorAll("[name]");
+          var formValues = Array.from(enableInputs).reduce(function(values, input) {
+            values[input.name] = input.value;
+            return values;
+          }, {});
+          options.onSubmit(formValues);
+        }
+        // Truong hop submit voi hanh vi mac dinh
+        else {
+          formElement.submit();
         }
       }
     }
@@ -882,9 +893,9 @@ function Validator(options) {
         }
         // Xu ly truong hop khi nguoi dung nhap
         inputElement.oninput = function() {
-          var errorElement = inputElement.parentElement.querySelector(options.errorSelector);
+          var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(options.errorSelector);
           errorElement.innerText = "";
-          inputElement.parentElement.classList.remove("invalid");
+          getParent(inputElement, options.formGroupSelector).classList.remove("invalid");
         }
       }
     });

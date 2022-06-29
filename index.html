@@ -29,22 +29,26 @@
     <div class="spacer"></div>
     <div class="form-group">
       <label for="fullname" class="form-label">Full Name</label>
-      <input type="text" id="fullname" class="fullname" placeholder="VD: Binh Dev">
+      <div>
+        <div class="">
+          <input type="text" id="fullname" name="fullname" class="fullname" placeholder="VD: Binh Dev">
+        </div>
+      </div>
       <span class="form-message"></span>
     </div>
     <div class="form-group">
       <label for="email" class="form-label">Email</label>
-      <input type="text" id="email" class="email" placeholder="VD: binhdev@gmail.com">
+      <input type="text" id="email" name="email" class="email" placeholder="VD: binhdev@gmail.com">
       <span class="form-message"></span>
     </div>
     <div class="form-group">
       <label for="password" class="form-label">Password</label>
-      <input type="password" id="password" class="password" placeholder="enter your password">
+      <input type="password" id="password" name="password" class="password" placeholder="enter your password">
       <span class="form-message"></span>
     </div>
     <div class="form-group">
       <label for="re-password" class="form-label">Re-Password</label>
-      <input type="password" id="re-password" class="re-password" placeholder="re-enter your password">
+      <input type="password" id="re-password" name="re-password" class="re-password" placeholder="re-enter your password">
       <span class="form-message"></span>
     </div>
     <button class="form-submit" type="submit">Sign In</button>
@@ -114,6 +118,7 @@
 <script>
   Validator({
     form: "#form-1",
+    formGroupSelector: '.form-group',
     errorSelector: ".form-message",
     rules: [
       Validator.isRequired("#fullname", "Please enter full name"),
@@ -126,6 +131,7 @@
       }, "Password incorrect")
     ],
     onSubmit: function (data) {
+      // call api
       console.log(data);
     }
   })
