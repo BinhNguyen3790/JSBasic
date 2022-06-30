@@ -817,9 +817,9 @@ btn.addEventListener("click", viec1);
 /** 77. Form validation */
 // Doi tuong
 function Validator(options) {
-  function getParent (element, selector) {
+  function getParent(element, selector) {
     while (element.parentElement) {
-      if(element.parentElement.matches(selector)) {
+      if (element.parentElement.matches(selector)) {
         return element.parentElement;
       }
       element = element.parentElement;
@@ -834,8 +834,17 @@ function Validator(options) {
     // Lay ra cac rule cua selector
     var rules = selectorRules[rule.selector];
     // Lap qua tung rule va kiem tra
-    for(var i = 0; i < rules.length; ++i) {
-      errorMessage = rules[i](inputElement.value);
+    for (var i = 0; i < rules.length; ++i) {
+      switch (inputElement.type) {
+        case 'radio':
+        case 'checkbox':
+          errorMessage = rules[i](
+            formElement.querySelector(rule.selector + ':checked')
+          );
+          break;
+        default:
+          errorMessage = rules[i](inputElement.value);
+      }
       if (errorMessage) break;
     }
     if (errorMessage) {
@@ -857,16 +866,32 @@ function Validator(options) {
       options.rules.forEach(function (rule) {
         var inputElement = formElement.querySelector(rule.selector);
         var isValid = validate(inputElement, rule);
-        if(!isValid) {
+        if (!isValid) {
           isFormValid = false;
         }
       });
       if (isFormValid) {
         // Truong hop submit voi javascript
-        if(typeof options.onSubmit === "function") {
+        if (typeof options.onSubmit === "function") {
           var enableInputs = formElement.querySelectorAll("[name]");
-          var formValues = Array.from(enableInputs).reduce(function(values, input) {
-            values[input.name] = input.value;
+          var formValues = Array.from(enableInputs).reduce(function (values, input) {
+            switch (input.type) {
+              case 'radio':
+                values[input.name] = formElement.querySelector('input[name="' + input.name + '"]:checked').value;
+                break;
+              case 'checkbox':
+                if (!input.matches(':checked')) return values;
+                if (!Array.isArray(values[input.name])) {
+                  values[input.name] = [];
+                }
+                values[input.name].push(input.value);
+                break;
+              case 'file':
+                values[input.name] = input.files;
+                break;
+              default:
+                values[input.name] = input.value;
+            }
             return values;
           }, {});
           options.onSubmit(formValues);
@@ -885,19 +910,19 @@ function Validator(options) {
       } else {
         selectorRules[rule.selector] = [rule.test];
       }
-      var inputElement = formElement.querySelector(rule.selector);
-      if (inputElement) {
+      var inputElements = formElement.querySelectorAll(rule.selector);
+      Array.from(inputElements).forEach(function (inputElement) {
         // Xu ly truong hop blur khoi input
         inputElement.onblur = function () {
           validate(inputElement, rule);
         }
         // Xu ly truong hop khi nguoi dung nhap
-        inputElement.oninput = function() {
+        inputElement.oninput = function () {
           var errorElement = getParent(inputElement, options.formGroupSelector).querySelector(options.errorSelector);
           errorElement.innerText = "";
           getParent(inputElement, options.formGroupSelector).classList.remove("invalid");
         }
-      }
+      });
     });
     console.log(selectorRules);
   }
@@ -907,7 +932,7 @@ Validator.isRequired = function (selector, message) {
   return {
     selector: selector,
     test: function (value) {
-      return value.trim() ? undefined : message || "Please enter!"
+      return value ? undefined : message || "Please enter!"
     }
   };
 };
@@ -915,8 +940,8 @@ Validator.isEmail = function (selector, message) {
   return {
     selector: selector,
     test: function (value) {
-       var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-       return regex.test(value) ? undefined : message || "Please enter correct email!"
+      var regex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+      return regex.test(value) ? undefined : message || "Please enter correct email!"
     }
   };
 };
@@ -924,15 +949,28 @@ Validator.minLength = function (selector, min, message) {
   return {
     selector: selector,
     test: function (value) {
-       return value.length >= min ? undefined : message || `Please enter minimun ${min} character`;
+      return value.length >= min ? undefined : message || `Please enter minimun ${min} character`;
     }
   };
 };
-Validator.isConfirmed = function(selector, getConfirmValue, message) {
+Validator.isConfirmed = function (selector, getConfirmValue, message) {
   return {
     selector: selector,
     test: function (value) {
-      return value == getConfirmValue()? undefined : message || "Value incorrect!";
+      return value == getConfirmValue() ? undefined : message || "Value incorrect!";
     }
   }
 }
+
+
+/** 78. JSON */
+// 1. Là 1 định dạng dữ liệu (chuỗi)
+// 2. JavaScript Object Notation
+// 3. JSON: Number, String, Boolean, Null, Aray, Object
+// Thao tác : mã hóa/encode và giải mã/decode
+// stringify --> javascript type sang json
+// parse --> json sang javascript type
+var json = '{"name":"BinhDev","age":18}';
+console.log(JSON.parse(json));
+console.log(JSON.stringify());
+

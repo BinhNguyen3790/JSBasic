@@ -10,12 +10,15 @@
     .red {
       color: red;
     }
+
     ul {
       display: none;
     }
-    input:focus ~ ul {
+
+    input:focus~ul {
       display: block;
     }
+
     .invalid {
       color: red;
     }
@@ -31,19 +34,19 @@
       <label for="fullname" class="form-label">Full Name</label>
       <div>
         <div class="">
-          <input type="text" id="fullname" name="fullname" class="fullname" placeholder="VD: Binh Dev">
+          <input type="text" id="fullname" rules="required" name="fullname" class="fullname" placeholder="VD: Binh Dev">
         </div>
       </div>
       <span class="form-message"></span>
     </div>
     <div class="form-group">
       <label for="email" class="form-label">Email</label>
-      <input type="text" id="email" name="email" class="email" placeholder="VD: binhdev@gmail.com">
+      <input type="text" id="email" rules="required|email" name="email" class="email" placeholder="VD: binhdev@gmail.com">
       <span class="form-message"></span>
     </div>
     <div class="form-group">
       <label for="password" class="form-label">Password</label>
-      <input type="password" id="password" name="password" class="password" placeholder="enter your password">
+      <input type="password" id="password" rules="required|min:6" name="password" class="password" placeholder="enter your password">
       <span class="form-message"></span>
     </div>
     <div class="form-group">
@@ -51,17 +54,47 @@
       <input type="password" id="re-password" name="re-password" class="re-password" placeholder="re-enter your password">
       <span class="form-message"></span>
     </div>
+    <div class="form-group">
+      <label for="avatar" class="form-label">Avatar</label>
+      <input type="file" id="avatar" name="avatar" class="avatar">
+      <span class="form-message"></span>
+    </div>
+    <div class="form-group">
+      <label for="country" class="form-label">Country</label>
+      <select id="country" name="country" class="country">
+        <option value="">-- Country --</option>
+        <option value="hni">Hà Nội</option>
+        <option value="hpg">Hải Phòng</option>
+      </select>
+      <span class="form-message"></span>
+    </div>
+    <div class="form-group">
+      <label for="gender" class="form-label">Gender</label>
+      <div>
+        <input type="checkbox" name="gender" value="male" class="gender">
+        <label for="gender">Male</label>
+      </div>
+      <div>
+        <input type="checkbox" name="gender" value="female" class="gender">
+        <label for="gender">Female</label>
+      </div>
+      <div>
+        <input type="checkbox" name="gender" value="other" class="gender">
+        <label for="gender">Other</label>
+      </div>
+      <span class="form-message"></span>
+    </div>
     <button class="form-submit" type="submit">Sign In</button>
   </form>
 
   <!-- 77 -->
-<button id="btn">Click me!</button>
+  <button id="btn">Click me!</button>
   <!-- 76 -->
   <a name="learn" href="https://google.com" target="_blank">google</a>
   <br />
   <a name="search" href="https://facebook.com" target="_blank">facebook</a>
   <br />
-  <input placeholder="serch"/>
+  <input placeholder="serch" />
   <ul>
     <li>Javascript</li>
     <li>PHP</li>
@@ -114,7 +147,7 @@
     </h2>
   </div>
 </body>
-<script src="./common.js"></script>
+<!-- <script src="./common.js"></script>
 <script>
   Validator({
     form: "#form-1",
@@ -128,13 +161,23 @@
       Validator.isRequired("#re-password"),
       Validator.isConfirmed("#re-password", function () {
         return document.querySelector("#form-1 #password").value;
-      }, "Password incorrect")
+      }, "Password incorrect"),
+      Validator.isRequired("input[name='gender']"),
+      Validator.isRequired("#country"),
+      Validator.isRequired("#avatar"),
     ],
     onSubmit: function (data) {
       // call api
-      console.log(data);
+      console.log(JSON.stringify(data));
     }
   })
+</script> -->
+<script src="./validator.js"></script>
+<script>
+  var form = new Validator('#form-1');
+  form.onSubmit = function (formData) {
+    console.log(formData);
+  }
 </script>
 
 </html>
