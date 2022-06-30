@@ -147,7 +147,15 @@
     </h2>
   </div>
 </body>
-<!-- <script src="./common.js"></script>
+<!-- <script src="./validator.js"></script>
+<script>
+  var form = new Validator('#form-1');
+  form.onSubmit = function (formData) {
+    console.log(formData);
+  }
+</script> -->
+
+<script src="./common.js"></script>
 <script>
   Validator({
     form: "#form-1",
@@ -171,13 +179,6 @@
       console.log(JSON.stringify(data));
     }
   })
-</script> -->
-<script src="./validator.js"></script>
-<script>
-  var form = new Validator('#form-1');
-  form.onSubmit = function (formData) {
-    console.log(formData);
-  }
 </script>
 
 </html>

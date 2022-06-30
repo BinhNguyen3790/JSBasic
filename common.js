@@ -924,7 +924,6 @@ function Validator(options) {
         }
       });
     });
-    console.log(selectorRules);
   }
 };
 // Dinh nghia rules
@@ -973,4 +972,20 @@ Validator.isConfirmed = function (selector, getConfirmValue, message) {
 var json = '{"name":"BinhDev","age":18}';
 console.log(JSON.parse(json));
 console.log(JSON.stringify());
+
+
+/** 79. Promise */
+// đồng bộ sync
+// bất đồng bộ async
+// nỗi đau
+// lý thuyết, cách hoạt động
+// thực hành, ví dụ
+
+// Async: setTimeout, setInterval, fetch, XMLHttpRequest, file reading, request animation frame
+// Callback để xử lý bất đồng bộ
+
+setTimeout(function () {
+  console.log(1);
+},1000);
+console.log(2);
 
