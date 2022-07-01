@@ -980,12 +980,322 @@ console.log(JSON.stringify());
 // nỗi đau
 // lý thuyết, cách hoạt động
 // thực hành, ví dụ
-
 // Async: setTimeout, setInterval, fetch, XMLHttpRequest, file reading, request animation frame
 // Callback để xử lý bất đồng bộ
+// Sync, Async
+// setTimeout(function () {
+//   console.log(1);
+// }, 1000);
+// console.log(2);
+// callback hell
+// pyramid of doom
 
-setTimeout(function () {
-  console.log(1);
-},1000);
-console.log(2);
 
+/** 80. Promise pain */
+// setTimeout(function () {
+//   console.log(1);
+//   setTimeout(function () {
+//     console.log(2);
+//     setTimeout(function () {
+//       console.log(3);
+//     }, 1000);
+//   }, 1000);
+// }, 1000);
+
+
+/** 81. Promise lý thuyết, cách hoạt động */
+// memory leak
+// 1. pedding
+// 2. fulfilled
+// 3. Rejected
+var promise = new Promise(
+  // Excuter
+  function (resolve, reject) {
+    // Logic
+    // Thành công: resolve()
+    // Thất bại: reject()
+    resolve();
+  }
+);
+// promise
+//   .then(function () {
+//     console.log("Successfully!");
+//   })
+//   .catch(function (course) {
+//     console.log(course);
+//   })
+//   .finally(function () {
+//     console.log("Done!");
+//   });
+
+
+/** 82. Promise chain */
+// promise
+//   .then(function () {
+//     return new Promise(function (resolve) {
+//       setTimeout(function () {
+//         resolve([1, 2, 3]);
+//       }, 3000)
+//     })
+//   })
+//   .then(function (data) {
+//     console.log(data);
+//     return 2;
+//   })
+//   .then(function (data) {
+//     console.log(data);
+//     return 3;
+//   })
+//   .then(function (data) {
+//     console.log(data);
+//   })
+//   .catch(function (course) {
+//     console.log(course);
+//   })
+//   .finally(function () {
+//     console.log("Done!");
+//   });
+// function sleep(ms) {
+//   return new Promise(function (resolve) {
+//     setTimeout(resolve, ms);
+//   })
+// }
+// sleep(1000)
+//   .then(function(){
+//     console.log(1);
+//     return sleep(1000);
+//   })
+//   .then(function(){
+//     console.log(2);
+//     return sleep(1000);
+//   })
+//   .then(function(){
+//     console.log(3);
+//     return sleep(1000);
+//   });
+
+
+/** 83. Promise method(resolve, reject, all) */
+function sleep(ms) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve, ms);
+  })
+}
+sleep(1000)
+  .then(function () {
+    console.log(1);
+    return sleep(1000);
+  })
+  .then(function () {
+    console.log(2);
+    return new Promise(function (resolve, reject) {
+      reject('error');
+    });
+  })
+  .then(function () {
+    console.log(3);
+    return sleep(1000);
+  })
+  .catch(function (err) {
+    console.log(err);
+  });
+// Promise.resolve
+// Promise.reject
+// Promise.all
+var prom = Promise.resolve('Success!');
+prom
+  .then(function (result) {
+    console.log('result:', result);
+  })
+  .catch(function (err) {
+    console.log('err:', err);
+  });
+var promise1 = new Promise(function (resolve) {
+  setTimeout(function () {
+    resolve([1]);
+  }, 2000);
+});
+var promise2 = new Promise(function (resolve) {
+  setTimeout(function () {
+    resolve([2, 3]);
+  }, 5000)
+})
+Promise.all([promise1, promise2])
+  .then(function ([result1, result2]) {
+    console.log(result1.concat(result2));
+  });
+
+
+/** 84. ECMAScript 6 
+ * 1. Let, const
+ * 2. Template Literals
+ * 3. Multi-line String
+ * 4. Arrow function
+ * 5. Classes
+ * 6. Default paramenter values
+ * 7. Destructuring
+ * 8. Rest parameters
+ * 9. Spread
+ * 10. Enhanced object literals
+ * 11. Tagged template literal
+ * 12. Modules
+ * 13. Optional chaining(?.)
+ * // babel
+*/
+// 1. Var / Let, Const: Scope, Hosting
+// 2. Const / Var, Let: Assignment
+// Code block: if else, loop, {}, ....
+if (true) {
+  var cou = 'Javascript basic!';
+}
+console.log('course: ', cou);
+var a = 1;
+console.log(a);
+
+
+/** 85. Arrow function */
+// var logger = (log) => {
+//   console.log(log);
+//   logger('Message...');
+//   var sum = (a, b) => a + b;
+//   console.log(sum(2, 2));
+//   const coursee = {
+//     name: 'Javascript basicww!',
+//     getName: function () {
+//       return this.name; //context
+//     }
+//   };
+//   console.log(coursee.getName());
+// }
+
+
+/** 86. Template Literals */
+const courseName = 'Javascript';
+const description = `Course name: ${courseName}`; // nội suy
+console.log(description);
+
+
+/** 87. Classes */
+// function Course(name, price) {
+//   this.name = name;
+//   this.price = price;
+// }
+class Course {
+  constructor(name, price) {
+    this.name = name;
+    this.price = price;
+  }
+  getName() {
+    return this.name;
+  }
+  getPrice() {
+    return this.price;
+  }
+};
+const phpCourse = new Course('php', 1000);
+const jsCourse = new Course('javascript', 1200);
+console.log(phpCourse);
+console.log(jsCourse);
+
+
+/** 88. Enhanced object literals */
+// 1. định nghĩa key: value cho object
+// 2. định nghĩa method cho object
+// 3. định nghĩa key cho object dưới dạng biến
+var name = 'jacascript';
+var price = 1000;
+var course = {
+  name: name,
+  price: price,
+  getName() {
+    return name;
+  }
+}
+console.log(course.getName());
+
+
+/** 89. Default parameter values */
+function loggers(log = 'Defaults value') {
+  console.log(log);
+}
+loggers('dadf');
+
+
+/** 90. Destructuring, Rest parameters */
+var array = ['javascript', 'php', 'ruby'];
+// var a = array[0];
+// var b = array[1];
+// var c = array[2];
+var [a, ...rest] = array;
+console.log(a);
+console.log(rest);
+var course = {
+  name: 'javascript',
+  price: 2000,
+  children: {
+    name: 'ReactJs'
+  },
+  dess: 'value'
+};
+var { name: parentName, price, children: { name }, dess = 'default' } = course;
+console.log(parentName, price, name, dess);
+//Rest parameters
+function loggerss(...params) {
+  console.log(params);
+}
+console.log(loggerss(1, 2, 3, 4, 5));
+
+
+/** 91. Spread */
+var array1 = ['javascript', 'ruby', 'php'];
+var array2 = ['Reactjs', 'dart'];
+var array3 = [...array2, ...array1];
+console.log(array3);
+var arrrr = ['javascript', 'php'];
+function loggersa(a, b, c) {
+  console.log(a, b, c);
+}
+loggersa(...arrrr);
+
+
+/** 92. Tagged template literals */
+function highlight([first, ...strings], ...values) {
+  return values.reduce(
+    (acc, curr) => [...acc, `<span>${curr}</span>`, strings.shift()],
+    [first]
+  ).join('');
+}
+var brand = 'f8';
+var course = 'javascript';
+const htmll = highlight`Hoc lap trinh ${course} tai ${brand} !`;
+console.log(htmll);
+
+
+/** 93. Modules */
+// Import / Export
+// bóc tách 1 thành phần xử lý một nghiệp vụ cụ thể ra 1 file
+import logger from './logger.js';
+import {
+  TYPE_LOG,
+  TYPE_WARN,
+  TYPE_ERROR
+} from './constants.js';
+logger('Text message!', TYPE_ERROR);
+
+
+/** 94. Optional chaining(?.) */
+const obj = {
+  name: 'Alice',
+  cat: {
+    name: 'Dinah',
+    // cat2: {
+    //   name: 'Dinah2',
+    //   cat3: {
+    //     name: 'Dinah3'
+    //   }
+    // }
+  }
+}
+if (obj.cat.cat2?.cat3) {
+  console.log(obj.cat.cat2.cat3.name); 
+}
