@@ -1,0 +1,23 @@
+{
+  "name": "jsbasic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "common.js",
+  "scripts": {
+    "start": "json-server --watch db.json",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BinhNguyen3790/JSBasic.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/BinhNguyen3790/JSBasic/issues"
+  },
+  "homepage": "https://github.com/BinhNguyen3790/JSBasic#readme",
+  "dependencies": {
+    "json-server": "^0.17.0"
+  }
+}
