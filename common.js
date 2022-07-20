@@ -1465,7 +1465,7 @@ fetch(postApi)
   })
   .catch(function (err) {
     console.log(err);
-  })
+  });
 
 
 /** 98. Json server */
@@ -1489,3 +1489,269 @@ fetch(postApi)
 // - Delete: xóa -> DELETE
 // Postman
 // rest api định nghĩa những hành động dựa trên những phương thức của giao thức http
+
+
+// ------------------ Javascript Nâng Cao -------------------- //
+
+
+/** 101.IIFE - Immediately Invoked Function Expression */
+// self-invoking function
+// 1. IIFE trông như thế nào
+// 2. Dùng dấu; trước IIFE
+// 3. IIFE là hàm 'private'
+// 4. Sử dụng IIFE khi nào
+// 5. Các cách tạo ra một IIFE
+// 6. ví dụ sử dụng IIFE
+(function (mess) {
+  console.log('now: ', mess)
+})("hello there!");
+
+var app = (function () {
+  const cars = [];
+  console.log('now: fadfasdf',)
+  return {
+    get(index) {
+      return cars[index]
+    },
+    add(car) {
+      cars.push(car);
+    },
+    edit(index, car) {
+      cars[index] = car
+    },
+    delete(index) {
+      cars.splice(index, 1)
+    }
+  }
+})();
+
+
+/** 102. scope - phạm vi 
+ * - Các loại phạm vi
+ *  - global - toàn cục
+ *  - code block - khối mã: let, const
+ *  - local scope - hàm: var, function
+ * - Khi gọi mỗi hàm luôn có một phạm vi mới được tạo
+ * - Các hàm có thể truy cập các biến được khai báo trong phạm vi của nó và bên ngoài của nó
+ * - Cách thức một biến được truy cập
+ * - Khi nào một biến bị xóa khỏi bộ nhớ?
+ *  - Biến toàn cục?
+ *  - Biến trong code block & trong hàm?
+ *  - Biến trong hàm được tham chiếu bởi 1 hàm?
+ * 
+*/
+
+
+/** 103.closure 
+ * Là một hàm có thể ghi nhớ nơi nó được tạo và truy cập được biến ở bên ngoài phạm vi của nó
+ * # Ứng dụng
+ *  Viết code ngắn gọn hơn
+ *  Biểu diễn, ứng dụng tính Private tring OOP
+ * # Tóm tắt
+ * # Lưu ý
+ *  Biến được tham chiếu (refer) trong closure sẽ không được xóa khỏi bộ nhớ khi hàm cha thực thi xong
+ *  Các khái niệm Javascript nâng cao rất dễ gây nhầm lẫn
+ *  
+*/
+function createCounter() {
+  let counter = 0;
+  function increase() {
+    return ++counter
+  }
+  return increase;
+}
+const counter1 = createCounter();
+console.log(counter1());
+console.log(counter1());
+console.log(counter1());
+console.log(counter1());
+function createLogger(namespace) {
+  function logger(message) {
+    console.log(`[${namespace}] ${message}`);
+  }
+  return logger
+}
+const infoLogger = createLogger('info');
+infoLogger("bắt đầu gửi mail!");
+infoLogger('gữi mail lỗi 1 !');
+function createStorage(key) {
+  const store = JSON.parse(localStorage.getItem(key)) ?? {}
+  const save = () => {
+    localStorage.setItem(key, JSON.stringify(store));
+  }
+  const storage = {
+    get(key) {
+      return store[key]
+    },
+    set(key, value) {
+      store[key] = value
+      save()
+    },
+    remove(key) {
+      delete store[key]
+      save()
+    }
+  }
+  return storage
+}
+// profile
+const profileSetting = createStorage('profile_setting');
+console.log(profileSetting.set('fullName'));
+profileSetting.set('fullName', 'BinhDev');
+
+
+/** 104. Hoisting */
+console.log(age);
+var age = 16;
+console.log(sum(6, 9));
+function sum(a, b) {
+  return a + b;
+}
+
+
+/** 105. use strict */
+// 'use strict';
+// fullName = 'Nguyen Van A'
+// function testFunc() {
+//   age = 18
+// }
+// testFunc()
+
+
+/** 106. Primitive types & Reference types (tham trị tham chiếu) 
+ * 1. Value types (Primitive data types)
+ * - string
+ * - number
+ * - boolean
+ * - bigint
+ * - symbol
+ * - undefined
+ * - null
+ * 2. Reference types (Non-primitive data types)
+ * - object
+ * - array
+ * - function
+ * ## data types with functions
+ * - value types
+ * - reference types
+*/
+
+
+/** 107. this trong javascript */
+const iPhone7 = {
+  // thuộc tính - property
+  name: 'iphone 7',
+  color: 'White',
+  weight: 300,
+  // phương thức - Method
+  takePhoto() {
+    console.log('take a photo');
+  },
+  objChild: {
+    methodChild() {
+      console.log(this);
+    }
+  }
+};
+function Car(name, color, weight) {
+  this.name = name;
+  this.color = color;
+  this.weight = weight;
+}
+const mercedesS450 = new Car('Mercedes S450', 'black', '1200');
+console.log(mercedesS450);
+const button = document.querySelector('.clickC');
+button.onclick = function () {
+  console.log(this);
+}
+
+
+/** 108. Fn.bind() method p1 */
+// this.firstName = 'Minh';
+// this.lastName = 'Thu';
+const teacher = {
+  firstName: 'Minh',
+  lastName: 'Thao',
+  getFullName() {
+    return `${this.firstName} ${this.lastName}`
+  }
+}
+console.log(teacher.getFullName());
+const getTeacherName = teacher.getFullName.bind(teacher)
+console.log(getTeacherName());
+
+const $ = document.querySelector.bind(document);
+const $$ = document.querySelectorAll.bind(document);
+const apap = (() => {
+  const cars = ['BMW']
+  const root = $('#root')
+  const input = $('#input')
+  const submit = $('#submit')
+  return {
+    add(car) {
+      cars.push(car)
+    },
+    delete(index) {
+      cars.splice(index, 1)
+    },
+    render() {
+      const html = cars.map((car, index) => `
+        <li>${car}<span class="delete" data-index="${index}">&times</span></li>
+      `).join('')
+      root.innerHTML = html
+    },
+    handleDelete(e) {
+      const deleteBtn = e.target.closest('.delete');
+      if (deleteBtn) {
+        const index = deleteBtn.dataset.index
+        this.delete(index)
+        this.render()
+      }
+    },
+    init() {
+      submit.onclick = () => {
+        const car = input.value
+        this.add(car)
+        this.render()
+        input.value = null
+        input.focus()
+      }
+      root.onclick = this.handleDelete.bind(this);
+      this.render();
+    }
+  }
+})();
+apap.init();
+
+
+/** 109. Fn.call() method trong javascript */
+function random() {
+  console.log(Math.random());
+}
+random();
+const teacher2 = {
+  firstName: "Minh",
+  lastName: "Thu"
+}
+const me = {
+  firstName: "Son",
+  lastName: "Dang",
+  showFullName() {
+    console.log(`${this.firstName} ${this.lastName}`)
+  }
+}
+me.showFullName.call(me);
+
+
+/** 110. Fn.apply() method trong javascript */
+const teacherr = {
+  firstName: "Minh",
+  lastName: "Thu"
+}
+function greet(greeting, messagee) {
+  return `${greeting} ${this.firstName} ${this.lastName} .${messagee}`
+}
+let resultss = greet.apply(teacherr, ["hello teacher!", "are you ok"]);
+console.log(resultss);
+resultss = greet.call(teacherr, "hello teacher!", "are you ok")
+console.log(resultss);
